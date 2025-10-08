@@ -36,11 +36,14 @@ lib/
 ## 🚀 Features
 
 - [x] **Native Splash Screen** with custom logo and colors
-- [x] **Onboarding Flow** with gender selection
-- [x] **Clean Architecture** structure
+- [x] **Native Splash Screen** with custom logo and colors
+- [x] **Onboarding Flow** with interactive gender selection
+- [x] **Clean Architecture** structure with feature-based organization
+- [x] **State Management** with StatefulWidget toggles
 - [x] **Bottom Navigation** with smooth slide animations
 - [x] **Routing** with GoRouter and debug logging
-- [x] **Gradient Backgrounds** and modern UI
+- [x] **Gradient Backgrounds** and modern UI design
+- [x] **Custom Assets** and illustrations
 - [ ] **Authentication System**
 - [ ] **Product Catalog**
 - [ ] **Shopping Cart**
@@ -48,24 +51,32 @@ lib/
 
 ## 📸 UI Progress
 
+### � Onboarding Flow
+<div align="center">
+  <img src="assets/screenshots/onboard.png" alt="Onboarding Screen" width="300"/>
+</div>
+
+*Beautiful onboarding with gender selection toggle, gradient background, and smooth animations*
+
+**Features Shown:**
+- � Purple gradient background
+- 👥 Gender selection toggle (Man/Woman)
+- 🖼️ Custom illustration with man-chair asset
+- 🔘 Interactive toggle buttons with state management
+- 📱 Modern card-based UI design
+
 ### 🎨 Splash Screen
-<!-- Add splash screen screenshots here -->
-![Splash Screen](docs/images/splash_screen.png)
+*Coming Soon - Custom native splash with purple gradient and app logo*
 
-*Custom native splash with purple gradient and app logo*
+### 🏠 Main Navigation  
+*Coming Soon - Bottom navigation with slide transitions between tabs*
 
-### 🎯 Onboarding Flow
-<!-- Add onboarding screenshots here -->
-![Onboarding Screen](docs/images/onboarding_screen.png)
-
-*Beautiful onboarding with gender selection and smooth animations*
-
-### 🏠 Main Navigation
-<!-- Add main navigation screenshots here -->
-![Home Screen](docs/images/home_screen.png)
-![Products Screen](docs/images/products_screen.png)
-
-*Bottom navigation with slide transitions between tabs*
+**Planned Screenshots:**
+- [ ] Native splash screen
+- [x] Onboarding flow with gender selection
+- [ ] Home screen with navigation
+- [ ] Products catalog screen
+- [ ] Cart and profile screens
 
 ### 🎭 Theme & Colors
 - **Primary Color**: `#9775FA` (Purple)
