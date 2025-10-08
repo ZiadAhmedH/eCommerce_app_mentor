@@ -1,16 +1,158 @@
-# ecommerce_app
+# 🛒 ECommerce App
 
-Deep into Bloc (cubit) - DI - Clean architucture
+A modern Flutter eCommerce application built with Clean Architecture, BLoC pattern, and Dependency Injection.
 
-## Getting Started
+## 📱 About
 
-This project is a starting point for a Flutter application.
+This project demonstrates modern Flutter development practices including:
+- **Clean Architecture** with feature-based organization
+- **BLoC (Cubit)** for state management
+- **Dependency Injection** with GetIt
+- **Custom Native Splash Screen**
+- **Smooth Animations & Transitions**
+- **Beautiful Onboarding Flow**
 
-A few resources to get you started if this is your first Flutter project:
+## 🏗️ Architecture
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```
+lib/
+├── core/
+│   ├── constants/        # App constants and colors
+│   ├── di/              # Dependency injection setup
+│   ├── error/           # Error handling
+│   ├── routing/         # GoRouter configuration
+│   ├── services/        # Core services
+│   └── usecases/        # Base use cases
+├── features/
+│   ├── auth/            # Authentication feature
+│   ├── onboarding/      # Onboarding screens
+│   ├── products/        # Product management
+│   └── splash/          # Splash screen
+└── shared/
+    ├── widgets/         # Reusable UI components
+    └── theme/           # App theming
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Features
+
+- [x] **Native Splash Screen** with custom logo and colors
+- [x] **Onboarding Flow** with gender selection
+- [x] **Clean Architecture** structure
+- [x] **Bottom Navigation** with smooth slide animations
+- [x] **Routing** with GoRouter and debug logging
+- [x] **Gradient Backgrounds** and modern UI
+- [ ] **Authentication System**
+- [ ] **Product Catalog**
+- [ ] **Shopping Cart**
+- [ ] **User Profile**
+
+## 📸 UI Progress
+
+### 🎨 Splash Screen
+<!-- Add splash screen screenshots here -->
+![Splash Screen](docs/images/splash_screen.png)
+
+*Custom native splash with purple gradient and app logo*
+
+### 🎯 Onboarding Flow
+<!-- Add onboarding screenshots here -->
+![Onboarding Screen](docs/images/onboarding_screen.png)
+
+*Beautiful onboarding with gender selection and smooth animations*
+
+### 🏠 Main Navigation
+<!-- Add main navigation screenshots here -->
+![Home Screen](docs/images/home_screen.png)
+![Products Screen](docs/images/products_screen.png)
+
+*Bottom navigation with slide transitions between tabs*
+
+### 🎭 Theme & Colors
+- **Primary Color**: `#9775FA` (Purple)
+- **Gradient**: Top to bottom purple gradient
+- **Typography**: Inter font family
+- **Design**: Modern, clean, and accessible
+
+## 🛠️ Tech Stack
+
+- **Flutter**: 3.29.2
+- **Dart**: 3.9.2
+- **State Management**: flutter_bloc (8.1.6)
+- **Routing**: go_router (14.2.7)
+- **DI**: get_it (8.0.2)
+- **HTTP Client**: dio (5.7.0)
+- **Local Storage**: shared_preferences (2.3.2)
+- **Splash**: flutter_native_splash (2.4.1)
+
+## 📋 Getting Started
+
+### Prerequisites
+- Flutter SDK (3.29.2 or higher)
+- Dart (3.9.2 or higher)
+- Android Studio / VS Code
+- Android/iOS device or emulator
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ZiadAhmedH/eCommerce_app_mentor.git
+   cd eCommerce_app_mentor
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Generate splash screen**
+   ```bash
+   flutter pub run flutter_native_splash:create
+   ```
+
+4. **Run the app**
+   ```bash
+   flutter run
+   ```
+
+## 📁 Project Structure
+
+The project follows **Clean Architecture** principles:
+
+- **Domain Layer**: Business logic and entities
+- **Data Layer**: Data sources and repositories
+- **Presentation Layer**: UI and state management
+
+Each feature is self-contained with its own:
+- Domain (entities, repositories, use cases)
+- Data (models, data sources, repository implementations)
+- Presentation (pages, widgets, BLoC/Cubit)
+
+## 🎯 Roadmap
+
+- [ ] Complete authentication system
+- [ ] Implement product catalog with categories
+- [ ] Add shopping cart functionality
+- [ ] Create user profile management
+- [ ] Add payment integration
+- [ ] Implement order tracking
+- [ ] Add push notifications
+- [ ] Create admin panel
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+
+**Ziad Ahmed** - [@ZiadAhmedH](https://github.com/ZiadAhmedH)
+
+Project Link: [https://github.com/ZiadAhmedH/eCommerce_app_mentor](https://github.com/ZiadAhmedH/eCommerce_app_mentor)
