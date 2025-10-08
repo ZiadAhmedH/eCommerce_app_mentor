@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColor{
 
-  static const int primaryColor = 0xFF9775FA;
+  static const Color primaryColor = Color(0xFF9775FA);
   
 
   // font colors

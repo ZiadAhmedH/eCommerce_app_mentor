@@ -56,7 +56,7 @@ class _GenderButton extends StatelessWidget {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: isSelected
-            ? Color(AppColor.primaryColor)
+            ? AppColor.primaryColor
             : AppColor.backgroundLight,
         foregroundColor: isSelected ? Colors.white : AppColor.textdark,
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),

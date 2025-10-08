@@ -30,12 +30,12 @@ dependencies:
   # Utils
   equatable: ^2.0.5
   flutter_svg: ^2.2.1
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  flutter_native_splash: ^2.4.1
   image: ^4.2.0
 
 flutter:
@@ -61,14 +61,17 @@ flutter:
           weight: 700
        
 
+   
 flutter_native_splash:
   color: "#9775FA"
-  image: assets/icons/Logo.png
-  
+  image: assets/icons/logo1.png
+  android_gravity: center
+  ios_content_mode: center
   android_12:
-    image: assets/icons/Logo.png
-    color: "#9775FA"
+    image: assets/icons/logo1.png
     icon_background_color: "#9775FA"
+
+
 
 
 
@@ -76,4 +79,4 @@ flutter_assets:
   assets_path: assets/
   output_path: lib/core/constents/
   filename: assets.dart
-    
+ 

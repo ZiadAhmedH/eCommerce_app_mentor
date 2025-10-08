@@ -6,34 +6,30 @@ import '../../features/products/presentation/pages/home_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_page.dart';
 import '../../features/onboarding/presentation/onboarding_view.dart';
-import '../services/onboarding_service.dart';
+import '../../features/splash/splash_view.dart';
 import 'app_routes.dart';
 
 class AppRouter {
   static final GoRouter _router = GoRouter(
     debugLogDiagnostics: kDebugMode, // Shows routing logs in terminal
-    initialLocation: AppRoutes.home,
+    initialLocation: AppRoutes.splash,
     redirect: (context, state) async {
       // Debug print for every navigation attempt
       if (kDebugMode) {
         print('🧭 ROUTER: Navigating to ${state.matchedLocation}');
       }
 
-      // Check if user has seen onboarding
-      final hasSeenOnboarding = await OnboardingService.hasSeenOnboarding();
-      final isOnOnboardingPage = state.matchedLocation == AppRoutes.onboarding;
-
-      // If user hasn't seen onboarding and is not already on onboarding page
-      if (!hasSeenOnboarding && !isOnOnboardingPage) {
-        if (kDebugMode) {
-          print('🚀 ROUTER: Redirecting to onboarding (first time user)');
-        }
-        return AppRoutes.onboarding;
-      }
-
-      return null; // No redirect needed
+      return null; // No redirect needed - splash handles navigation
     },
     routes: [
+      // Splash Route (Entry Point)
+      GoRoute(
+        path: AppRoutes.splash,
+        name: 'splash',
+        builder: (context, state) => const SplashView(),
+      ),
+
+      // Onboarding Route
       GoRoute(
         path: AppRoutes.onboarding,
         name: 'onboarding',

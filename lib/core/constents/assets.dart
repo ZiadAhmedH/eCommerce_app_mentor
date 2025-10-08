@@ -24,7 +24,7 @@ class Assets {
 
   /// Assets for assetsIconsLogo
   /// assets/icons/Logo.png
-  static const String assetsIconsLogo = "assets/icons/Logo.png";
+  static const String assetsIconsLogo = "assets/icons/Logo.svg";
 
   /// Assets for assetsIconsLogoAndroid12
   /// assets/icons/Logo_android12.png
