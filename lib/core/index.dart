@@ -2,7 +2,7 @@
 export 'errors/failures.dart';
 export 'errors/exceptions.dart';
 export 'usecases/usecase.dart';
-export 'constants/constants.dart';
+export 'constents/constants.dart';
 export 'utils/helpers.dart';
 export 'network/network_info.dart';
 export 'routing/app_router.dart';

@@ -10,8 +10,8 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   
   await setupDependencyInjection();
-
-  OnboardingService.resetOnboarding(); // For testing purposes; remove in production
+  
+  OnboardingService.resetOnboarding();
   
   runApp(const MyApp());
   WidgetsBinding.instance.addPostFrameCallback((_) {

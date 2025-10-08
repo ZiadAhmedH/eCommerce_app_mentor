@@ -72,4 +72,8 @@ flutter_native_splash:
 
 
 
+flutter_assets:
+  assets_path: assets/
+  output_path: lib/core/constents/
+  filename: assets.dart
     
