@@ -24,4 +24,7 @@ class AppRoutes {
 
   // Search
   static const String search = '/search';
+
+  // onboarding
+  static const String onboarding = '/onboarding';
 }

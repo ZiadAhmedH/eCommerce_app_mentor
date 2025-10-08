@@ -1,15 +1,45 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/products/presentation/pages/home_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_page.dart';
+import '../../features/onboarding/presentation/onboarding_view.dart';
+import '../services/onboarding_service.dart';
 import 'app_routes.dart';
 
 class AppRouter {
   static final GoRouter _router = GoRouter(
+    debugLogDiagnostics: kDebugMode, // Shows routing logs in terminal
     initialLocation: AppRoutes.home,
+    redirect: (context, state) async {
+      // Debug print for every navigation attempt
+      if (kDebugMode) {
+        print('🧭 ROUTER: Navigating to ${state.matchedLocation}');
+      }
+
+      // Check if user has seen onboarding
+      final hasSeenOnboarding = await OnboardingService.hasSeenOnboarding();
+      final isOnOnboardingPage = state.matchedLocation == AppRoutes.onboarding;
+
+      // If user hasn't seen onboarding and is not already on onboarding page
+      if (!hasSeenOnboarding && !isOnOnboardingPage) {
+        if (kDebugMode) {
+          print('🚀 ROUTER: Redirecting to onboarding (first time user)');
+        }
+        return AppRoutes.onboarding;
+      }
+
+      return null; // No redirect needed
+    },
     routes: [
+      GoRoute(
+        path: AppRoutes.onboarding,
+        name: 'onboarding',
+        builder: (context, state) => const OnboardingView(),
+      ),
+
       // Auth Routes
       GoRoute(
         path: AppRoutes.login,
@@ -17,7 +47,6 @@ class AppRouter {
         builder: (context, state) => const LoginPage(),
       ),
 
-      // Main App Routes with Shell Route for Bottom Navigation
       ShellRoute(
         builder: (context, state, child) {
           return MainAppShell(child: child);
@@ -26,7 +55,7 @@ class AppRouter {
           GoRoute(
             path: AppRoutes.home,
             name: 'home',
-            builder: (context, state) => const HomePage(),
+            builder: (context, state) => const HomeView(),
           ),
           GoRoute(
             path: AppRoutes.products,
@@ -69,19 +98,56 @@ class AppRouter {
   static GoRouter get router => _router;
 }
 
-class MainAppShell extends StatelessWidget {
+class MainAppShell extends StatefulWidget {
   final Widget child;
 
   const MainAppShell({super.key, required this.child});
 
   @override
+  State<MainAppShell> createState() => _MainAppShellState();
+}
+
+class _MainAppShellState extends State<MainAppShell> {
+  late PageController _pageController;
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    const HomeView(), // Home
+    const ProductsPage(), // Products
+    const Scaffold(body: Center(child: Text('Cart'))), // Cart placeholder
+    const Scaffold(body: Center(child: Text('Profile'))), // Profile placeholder
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: child,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          // Update the URL to match the current page
+          _updateRouteForIndex(index);
+        },
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: _getCurrentIndex(context),
-        onTap: (index) => _onItemTapped(context, index),
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
@@ -98,28 +164,40 @@ class MainAppShell extends StatelessWidget {
     );
   }
 
-  int _getCurrentIndex(BuildContext context) {
-    final location = GoRouterState.of(context).matchedLocation;
-    if (location.startsWith('/products')) return 1;
-    if (location.startsWith('/cart')) return 2;
-    if (location.startsWith('/profile')) return 3;
-    return 0; // Home
-  }
-
-  void _onItemTapped(BuildContext context, int index) {
+  void _updateRouteForIndex(int index) {
+    // Update URL without rebuilding the entire shell
     switch (index) {
       case 0:
+        if (kDebugMode) print('🏠 Going to Home');
         context.go(AppRoutes.home);
         break;
       case 1:
+        if (kDebugMode) print('🛍️ Going to Products');
         context.go(AppRoutes.products);
         break;
       case 2:
+        if (kDebugMode) print('🛒 Going to Cart');
         context.go(AppRoutes.cart);
         break;
       case 3:
+        if (kDebugMode) print('👤 Going to Profile');
         context.go(AppRoutes.profile);
         break;
     }
+  }
+
+  void _onItemTapped(int index) {
+    if (_currentIndex == index) return;
+
+    if (kDebugMode) {
+      print('📱 NAV: Tab $_currentIndex → Tab $index');
+    }
+
+    // Animate to the selected page
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOutCubic,
+    );
   }
 }

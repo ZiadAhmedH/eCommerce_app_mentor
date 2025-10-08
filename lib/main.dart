@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'core/routing/app_router.dart';
@@ -6,14 +7,13 @@ import 'core/di/dependency_injection.dart';
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   
-  // Keep the splash screen visible while initializing
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   
-  // Initialize dependencies
   await setupDependencyInjection();
+
+  OnboardingService.resetOnboarding(); // For testing purposes; remove in production
   
   runApp(const MyApp());
-  // Remove the splash screen after the first frame is rendered
   WidgetsBinding.instance.addPostFrameCallback((_) {
     FlutterNativeSplash.remove();
   });
@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        fontFamily: 'Inter',
       ),
       routerConfig: AppRouter.router,
     );
