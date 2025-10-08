@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/products/presentation/pages/home_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_page.dart';
@@ -9,15 +8,8 @@ import 'app_routes.dart';
 
 class AppRouter {
   static final GoRouter _router = GoRouter(
-    initialLocation: AppRoutes.splash,
+    initialLocation: AppRoutes.home,
     routes: [
-      // Splash Route
-      GoRoute(
-        path: AppRoutes.splash,
-        name: 'splash',
-        builder: (context, state) => const SplashPage(),
-      ),
-
       // Auth Routes
       GoRoute(
         path: AppRoutes.login,
