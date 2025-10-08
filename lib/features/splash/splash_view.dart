@@ -69,11 +69,13 @@ class _SplashViewState extends State<SplashView>
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
-          child: SvgPicture.asset(Assets.assetsIconsLogo, width: 50, height: 50),
+          child: SvgPicture.asset(
+            Assets.assetsIconsLogo,
+            width: 50,
+            height: 50,
+          ),
+        ),
       ),
-
-      )
     );
-
   }
 }
