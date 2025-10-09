@@ -51,12 +51,13 @@ lib/
 
 ## 📸 UI Progress
 
-### � Onboarding Flow
-<div align="center">
-  <img src="assets/screenshots/onboard.png" alt="Onboarding Screen" width="300"/>
+###  Flow
+<div >
+<img src="assets/screenshots/splash.png" alt="Onboarding Screen" width="150"/>
+
+  <img src="assets/screenshots/onboard.png" alt="Onboarding Screen" width="150"/>
 </div>
 
-*Beautiful onboarding with gender selection toggle, gradient background, and smooth animations*
 
 **Features Shown:**
 - � Purple gradient background
@@ -66,7 +67,7 @@ lib/
 - 📱 Modern card-based UI design
 
 ### 🎨 Splash Screen
-*Coming Soon - Custom native splash with purple gradient and app logo*
+* Custom splash with purple gradient and app logo*
 
 ### 🏠 Main Navigation  
 *Coming Soon - Bottom navigation with slide transitions between tabs*
