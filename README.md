@@ -53,9 +53,12 @@ lib/
 
 ###  Flow
 <div >
-<img src="assets/screenshots/splash.png" alt="Onboarding Screen" width="150"/>
+<img src="assets/screenshots/splash.png" alt="splash Screen" width="150"/>
+ 
+<img src="assets/screenshots/onborad.png" alt="Onboarding Screen" width="150"/>
 
-  <img src="assets/screenshots/onboard.png" alt="Onboarding Screen" width="150"/>
+<img src="assets/screenshots/authmain.png" alt="main auth Screen" width="150"/>
+
 </div>
 
 
