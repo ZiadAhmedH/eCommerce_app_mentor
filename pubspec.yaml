@@ -31,12 +31,23 @@ dependencies:
   equatable: ^2.0.5
   flutter_svg: ^2.2.1
   flutter_native_splash: ^2.4.6
+  
+  # JSON Serialization
+  json_annotation: ^4.8.1
+  
+  # Functional Programming
+  dartz: ^0.10.1
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   image: ^4.2.0
+  
+  # JSON Serialization
+  build_runner: ^2.4.7
+  json_serializable: ^6.7.1
 
 flutter:
   uses-material-design: true
@@ -47,7 +58,6 @@ flutter:
     - assets/fonts/
     - assets/images/
 
-#fonts
   fonts:
     - family: Inter
       fonts: 
@@ -59,24 +69,16 @@ flutter:
           weight: 600
         - asset: assets/fonts/Inter-Bold.ttf
           weight: 700
-       
 
-   
 flutter_native_splash:
   color: "#9775FA"
-  image: assets/icons/logo1.png
-  android_gravity: center
-  ios_content_mode: center
+  color_dark: "#121212"
+  image: assets/icons/Logo.png
   android_12:
-    image: assets/icons/logo1.png
+    image: assets/icons/Logo_android12.png
     icon_background_color: "#9775FA"
-
-
-
-
 
 flutter_assets:
   assets_path: assets/
   output_path: lib/core/constents/
   filename: assets.dart
- 

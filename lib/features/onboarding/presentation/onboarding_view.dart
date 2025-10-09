@@ -56,7 +56,7 @@ class _OnboardingViewState extends State<OnboardingView>
   Future<void> _completeOnboarding(BuildContext context) async {
     await OnboardingService.completeOnboarding();
     if (context.mounted) {
-      context.go(AppRoutes.home);
+      context.go(AppRoutes.mainauth);
     }
   }
 

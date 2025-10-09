@@ -3,6 +3,7 @@ class AppRoutes {
   static const String splash = '/splash';
 
   // Auth routes
+  static const String mainauth = '/mainauth';
   static const String login = '/login';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';

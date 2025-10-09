@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+
 import '../errors/failures.dart';
 
 class Result<T> {
@@ -10,8 +12,9 @@ class Result<T> {
   const Result.failure(this.failure) : data = null, isSuccess = false;
 }
 
+
 abstract class UseCase<Type, Params> {
-  Future<Result<Type>> call(Params params);
+  Future<Either<Failure, Type>> call(Params params);
 }
 
 class NoParams {}

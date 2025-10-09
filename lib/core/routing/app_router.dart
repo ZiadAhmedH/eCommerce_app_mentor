@@ -1,7 +1,9 @@
+import 'package:ecommerce_app/features/auth/presentation/pages/login_register_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/products/presentation/pages/home_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_page.dart';
@@ -36,12 +38,24 @@ class AppRouter {
         builder: (context, state) => const OnboardingView(),
       ),
 
+      GoRoute(
+        path: AppRoutes.mainauth,
+        name: 'mainauth',
+        builder: (context, state) => const LoginRegisterView(),
+      ),
+
       // Auth Routes
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
         builder: (context, state) => const LoginPage(),
       ),
+
+       GoRoute(
+            path: AppRoutes.register,
+            name: 'register',
+            builder: (context, state) => const RegisterPage(),
+       ),
 
       ShellRoute(
         builder: (context, state, child) {
