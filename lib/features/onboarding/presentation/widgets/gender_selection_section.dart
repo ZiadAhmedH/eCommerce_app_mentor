@@ -21,7 +21,11 @@ class GenderSelectionSection extends StatelessWidget {
           child: _GenderButton(
             gender: 'Men',
             isSelected: selectedGender == 'Men',
-            onTap: () => onGenderChanged('Men'),
+            onTap: () {
+              if (selectedGender != 'Men') {
+                onGenderChanged('Men');
+              }
+            },
           ),
         ),
 
@@ -30,8 +34,12 @@ class GenderSelectionSection extends StatelessWidget {
         Expanded(
           child: _GenderButton(
             gender: 'Women',
-            isSelected: selectedGender == 'Woman',
-            onTap: () => onGenderChanged('Woman'),
+            isSelected: selectedGender == 'Women',
+            onTap: () {
+              if (selectedGender != 'Women') {
+                onGenderChanged('Women');
+              }
+            },
           ),
         ),
       ],
@@ -55,12 +63,13 @@ class _GenderButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected
-            ? AppColor.primaryColor
-            : AppColor.backgroundLight,
+        backgroundColor:
+            isSelected ? AppColor.primaryColor : AppColor.backgroundLight,
         foregroundColor: isSelected ? Colors.white : AppColor.textdark,
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
       ),
       child: CustomTextWidget(
         text: gender,

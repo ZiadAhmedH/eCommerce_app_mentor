@@ -31,7 +31,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     final Either<Failure, User> result = await registerUseCase(request);
 
     result.fold(
-      (failure) => emit(RegisterError(failure.message)),
+      (failure) => emit(RegisterError(failure)),
       (user) => emit(RegisterSuccess(user)),
     );
   }

@@ -1,9 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:ecommerce_app/core/errors/faliure_calsses.dart';
+import 'package:ecommerce_app/features/auth/data/dataresource/auth_remote_data_source.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../../core/errors/mapper.dart';
 import '../../domain/entities/register_request.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../dataresource/auth_remote_data_source.dart';
 import '../models/register_request_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -22,7 +24,7 @@ class AuthRepositoryImpl implements AuthRepository {
       );
 
       final response = await remoteDataSource.register(requestModel);
-      
+
       if (response.user != null) {
         final user = User(
           id: response.user!.id,
@@ -32,12 +34,16 @@ class AuthRepositoryImpl implements AuthRepository {
         );
         return Right(user);
       } else {
-        return Left(ServerFailure('Registration successful but user data not returned'));
+        return Left(
+          ServerFailure(
+            message: 'Registration successful but user data not returned',
+            errorCode: 'INCOMPLETE_RESPONSE',
+          ),
+        );
       }
-    } on ApiException catch (e) {
-      return Left(ServerFailure(e.formattedErrorMessage));
     } catch (e) {
-      return Left(ServerFailure('Unexpected error: ${e.toString()}'));
+      final failure = FailureMapper.fromError(e);
+      return Left(failure);
     }
   }
 }

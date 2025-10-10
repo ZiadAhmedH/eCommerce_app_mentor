@@ -19,7 +19,6 @@ class ApiErrorModel {
 
   Map<String, dynamic> toJson() => _$ApiErrorModelToJson(this);
 
-  // Helper method to get formatted error messages
   String get formattedErrorMessage {
     if (errors == null || errors!.isEmpty) return message;
     

@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/shared/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import '../../core/constents/app_colors.dart';
 
@@ -93,13 +94,14 @@ class CustomButton extends StatelessWidget {
                     icon!,
                     const SizedBox(width: 8),
                   ],
-                  Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: getTextColor(),
-                    ),
+                  Column(
+                    children: [
+                      CustomTextWidget(text: text,
+                          color: getTextColor(),
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,),
+                      const Spacer()
+                    ],
                   ),
                 ],
               ),

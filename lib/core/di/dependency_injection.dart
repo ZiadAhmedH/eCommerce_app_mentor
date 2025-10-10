@@ -13,50 +13,85 @@ import '../../features/auth/presentation/cubit/register_cubit.dart';
 final getIt = GetIt.instance;
 
 Future<void> setupDependencyInjection() async {
-  // External dependencies
-  final sharedPreferences = await SharedPreferences.getInstance();
-  getIt.registerLazySingleton(() => sharedPreferences);
-  
-  // Dio setup
-  getIt.registerLazySingleton(() {
-    final dio = Dio();
-    dio.options = BaseOptions(
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 30),
-    );
+  try {
+    // Core dependencies first
+    await _setupCoreDependencies();
     
-    // Add logging interceptor in debug mode
-    if (kDebugMode) {
-      dio.interceptors.add(LogInterceptor(
-        requestBody: true,
-        responseBody: true,
-        requestHeader: true,
-        responseHeader: true,
-      ));
-    }
+    // Feature dependencies
+    _setupAuthDependencies();
     
-    return dio;
-  });
+    debugPrint('✅ Dependency injection setup completed');
+  } catch (e) {
+    debugPrint('❌ DI setup error: $e');
+    rethrow;
+  }
+}
 
-  // Auth feature
-  _setupAuthDependencies();
+Future<void> _setupCoreDependencies() async {
+  // External dependencies - these can be slow, so we optimize them
+  if (!getIt.isRegistered<SharedPreferences>()) {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    getIt.registerLazySingleton(() => sharedPreferences);
+  }
+  
+  // Dio setup with optimized configuration
+  if (!getIt.isRegistered<Dio>()) {
+    getIt.registerLazySingleton(() => _createOptimizedDio());
+  }
+}
+
+Dio _createOptimizedDio() {
+  final dio = Dio();
+  
+  // Optimized configuration for better performance
+  dio.options = BaseOptions(
+    connectTimeout: const Duration(seconds: 10), // Reduced timeout
+    receiveTimeout: const Duration(seconds: 10),
+    sendTimeout: const Duration(seconds: 10),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  );
+  
+  // Minimal logging in debug mode to reduce frame drops
+  if (kDebugMode) {
+    dio.interceptors.add(
+      LogInterceptor(
+        requestBody: false, // Disable to reduce console spam
+        responseBody: false, // Disable to reduce console spam
+        requestHeader: false,
+        responseHeader: false,
+        request: true,
+        error: true,
+        logPrint: (obj) => debugPrint('🌐 $obj'), // Custom log prefix
+      ),
+    );
+  }
+  
+  return dio;
 }
 
 void _setupAuthDependencies() {
   // Data sources
-  getIt.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(dio: getIt()),
-  );
+  if (!getIt.isRegistered<AuthRemoteDataSource>()) {
+    getIt.registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(dio: getIt()),
+    );
+  }
 
   // Repositories  
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(remoteDataSource: getIt()),
-  );
+  if (!getIt.isRegistered<AuthRepository>()) {
+    getIt.registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(remoteDataSource: getIt()),
+    );
+  }
 
   // Use cases
-  getIt.registerLazySingleton(() => RegisterUseCase(repository: getIt()));
+  if (!getIt.isRegistered<RegisterUseCase>()) {
+    getIt.registerLazySingleton(() => RegisterUseCase(repository: getIt()));
+  }
 
-  // Cubits
+  // Cubits - Factory for better memory management
   getIt.registerFactory(() => RegisterCubit(registerUseCase: getIt()));
 }

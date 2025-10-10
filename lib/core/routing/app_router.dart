@@ -10,71 +10,52 @@ import '../../features/products/presentation/pages/products_page.dart';
 import '../../features/onboarding/presentation/onboarding_view.dart';
 import '../../features/splash/splash_view.dart';
 import 'app_routes.dart';
-
 class AppRouter {
-  static final GoRouter _router = GoRouter(
-    debugLogDiagnostics: kDebugMode, // Shows routing logs in terminal
+  static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
-    redirect: (context, state) async {
-      // Debug print for every navigation attempt
-      if (kDebugMode) {
-        print('🧭 ROUTER: Navigating to ${state.matchedLocation}');
-      }
-
-      return null; // No redirect needed - splash handles navigation
-    },
+    debugLogDiagnostics: false, // Disable to reduce console spam
     routes: [
-      // Splash Route (Entry Point)
       GoRoute(
         path: AppRoutes.splash,
-        name: 'splash',
+        name: "splash",
         builder: (context, state) => const SplashView(),
       ),
-
-      // Onboarding Route
       GoRoute(
         path: AppRoutes.onboarding,
-        name: 'onboarding',
+        name: "onboarding",
         builder: (context, state) => const OnboardingView(),
       ),
-
       GoRoute(
         path: AppRoutes.mainauth,
-        name: 'mainauth',
-        builder: (context, state) => const LoginRegisterView(),
+        name: "mainauth",
+        builder: (context, state) =>  LoginRegisterView(),
       ),
-
-      // Auth Routes
       GoRoute(
         path: AppRoutes.login,
-        name: 'login',
+        name: "login",
         builder: (context, state) => const LoginPage(),
       ),
-
-       GoRoute(
-            path: AppRoutes.register,
-            name: 'register',
-            builder: (context, state) => const RegisterPage(),
-       ),
-
+      GoRoute(
+        path: AppRoutes.register,
+        name: "register",
+        builder: (context, state) => const RegisterPage(),
+      ),
       ShellRoute(
-        builder: (context, state, child) {
-          return MainAppShell(child: child);
-        },
+        builder: (context, state, child) => MainAppShell(child: child),
         routes: [
           GoRoute(
             path: AppRoutes.home,
-            name: 'home',
+            name: "home",
             builder: (context, state) => const HomeView(),
           ),
           GoRoute(
             path: AppRoutes.products,
-            name: 'products',
+            name: "products",
             builder: (context, state) => const ProductsPage(),
           ),
           GoRoute(
             path: AppRoutes.productDetail,
-            name: 'product-detail',
+            name: "productDetail",
             builder: (context, state) {
               final productId = state.pathParameters['id']!;
               return ProductDetailPage(productId: productId);
@@ -88,27 +69,20 @@ class AppRouter {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error, size: 64, color: Colors.red),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            Text(
-              'Page not found: ${state.matchedLocation}',
-              style: const TextStyle(fontSize: 18),
-            ),
+            Text('Route not found: ${state.name}'),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => context.go(AppRoutes.home),
-              child: const Text('Go to Home'),
+              child: const Text('Go Home'),
             ),
           ],
         ),
       ),
     ),
   );
-
-  static GoRouter get router => _router;
-}
-
-class MainAppShell extends StatefulWidget {
+}class MainAppShell extends StatefulWidget {
   final Widget child;
 
   const MainAppShell({super.key, required this.child});

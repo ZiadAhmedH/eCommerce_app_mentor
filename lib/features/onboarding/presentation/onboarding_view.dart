@@ -23,6 +23,7 @@ class _OnboardingViewState extends State<OnboardingView>
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -30,19 +31,19 @@ class _OnboardingViewState extends State<OnboardingView>
 
     _imageSlide = Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero)
         .animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
-          ),
-        );
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
+      ),
+    );
 
-    _containerSlide = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
-        .animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
-          ),
-        );
+    _containerSlide =
+        Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
+      ),
+    );
 
     _controller.forward();
   }
@@ -54,16 +55,19 @@ class _OnboardingViewState extends State<OnboardingView>
   }
 
   Future<void> _completeOnboarding(BuildContext context) async {
-    await OnboardingService.completeOnboarding();
-    if (context.mounted) {
-      context.go(AppRoutes.mainauth);
+    if (mounted) {
+      // navigate safely
+      context.push(AppRoutes.mainauth);
     }
   }
 
   void _selectGender(String gender) {
-    setState(() {
-      selectedGender = gender;
-    });
+    // ✅ Prevent infinite rebuild loop
+    if (selectedGender != gender) {
+      setState(() {
+        selectedGender = gender;
+      });
+    }
   }
 
   @override
@@ -71,7 +75,7 @@ class _OnboardingViewState extends State<OnboardingView>
     return Scaffold(
       backgroundColor: AppColor.gradientEnd,
       body: Stack(
-        alignment: AlignmentGeometry.bottomCenter,
+        alignment: Alignment.bottomCenter,
         children: [
           SlideTransition(
             position: _imageSlide,
@@ -85,7 +89,7 @@ class _OnboardingViewState extends State<OnboardingView>
               child: OnboardingContentCard(
                 selectedGender: selectedGender,
                 onGenderChanged: _selectGender,
-                onSkip: () => _completeOnboarding(context),
+                onSkip: () async => await _completeOnboarding(context),
               ),
             ),
           ),

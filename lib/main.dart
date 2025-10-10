@@ -1,22 +1,18 @@
 import 'package:ecommerce_app/core/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'core/routing/app_router.dart';
 import 'core/di/dependency_injection.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+   WidgetsFlutterBinding.ensureInitialized();
   
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   
   await setupDependencyInjection();
   
   OnboardingService.resetOnboarding();
   
   runApp(const MyApp());
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    FlutterNativeSplash.remove();
-  });
+  
 }
 
 class MyApp extends StatelessWidget {

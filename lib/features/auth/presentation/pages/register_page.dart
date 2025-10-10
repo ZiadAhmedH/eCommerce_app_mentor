@@ -29,30 +29,7 @@ class RegisterView extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: BlocListener<RegisterCubit, RegisterState>(
-        listener: (context, state) {
-          if (state is RegisterSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Account created successfully!'),
-                backgroundColor: Colors.green,
-              ),
-            );
-            context.go(AppRoutes.login);
-          } else if (state is RegisterError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        },
-        child: const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: RegisterForm(),
-        ),
-      ),
+      body: RegisterForm(),
     );
   }
 }
