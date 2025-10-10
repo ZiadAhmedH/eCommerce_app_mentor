@@ -56,13 +56,11 @@ class _OnboardingViewState extends State<OnboardingView>
 
   Future<void> _completeOnboarding(BuildContext context) async {
     if (mounted) {
-      // navigate safely
       context.push(AppRoutes.mainauth);
     }
   }
 
   void _selectGender(String gender) {
-    // ✅ Prevent infinite rebuild loop
     if (selectedGender != gender) {
       setState(() {
         selectedGender = gender;

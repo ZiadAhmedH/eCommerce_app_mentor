@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/core/constents/app_colors.dart';
 import 'package:ecommerce_app/core/constents/assets.dart';
 import 'package:ecommerce_app/core/routing/app_routes.dart';
+import 'package:ecommerce_app/shared/widgets/svg_handler.dart';
 import 'package:ecommerce_app/shared/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,15 +34,10 @@ class LoginRegisterView extends StatelessWidget {
                       color: AppColor.textdark,
                     ),
 
-                    SizedBox(height: screenHeight * 0.03),
 
-                    SvgPicture.asset(
-                      "assets/icons/Logo.svg",
-                      height: 100,
-                      width: 100,
-                    ),
+                 
 
-                    SizedBox(height: screenHeight * 0.06),
+                    SizedBox(height: screenHeight * 0.2),
 
                     // facebook button
                     Container(

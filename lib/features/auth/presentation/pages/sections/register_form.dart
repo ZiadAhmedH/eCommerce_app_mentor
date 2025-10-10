@@ -61,27 +61,30 @@ class _RegisterFormState extends State<RegisterForm> with RegisterErrorHandler {
           key: _formKey,
           child: Column(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Header Section
-                  const RegisterFormHeader(),
-              
-                  // Debug Info Section
-                 // RegisterDebugInfo(fieldErrors: _fieldErrors),
-              
-                  RegisterFormFields(
-                    firstNameController: _firstNameController,
-                    lastNameController: _lastNameController,
-                    emailController: _emailController,
-                    passwordController: _passwordController,
-                    fieldErrors: _fieldErrors,
-                    isPasswordVisible: _isPasswordVisible,
-                    onPasswordVisibilityToggle: _togglePasswordVisibility,
-                  ),
-              
-                  // Actions Section
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Header Section
+                    const RegisterFormHeader(),
+                
+                    // Debug Info Section
+                   // RegisterDebugInfo(fieldErrors: _fieldErrors),
+                
+                    RegisterFormFields(
+                      firstNameController: _firstNameController,
+                      lastNameController: _lastNameController,
+                      emailController: _emailController,
+                      passwordController: _passwordController,
+                      fieldErrors: _fieldErrors,
+                      isPasswordVisible: _isPasswordVisible,
+                      onPasswordVisibilityToggle: _togglePasswordVisibility,
+                    ),
+                
+                    // Actions Section
+                  ],
+                ),
               ),
               Spacer(),
                   RegisterFormActions(onRegisterPressed: _onRegisterPressed),
