@@ -53,9 +53,12 @@ lib/
 
 ###  Flow
 <div >
-<img src="assets/screenshots/splash.png" alt="Onboarding Screen" width="150"/>
+<img src="assets/screenshots/splash.png" alt="splash Screen" width="150"/>
+ 
+<img src="assets/screenshots/onborad.png" alt="Onboarding Screen" width="150"/>
 
-  <img src="assets/screenshots/onboard.png" alt="Onboarding Screen" width="150"/>
+<img src="assets/screenshots/authmain.png" alt="main auth Screen" width="150"/>
+
 </div>
 
 
@@ -73,8 +76,9 @@ lib/
 *Coming Soon - Bottom navigation with slide transitions between tabs*
 
 **Planned Screenshots:**
-- [ ] Native splash screen
+- [x] Native splash screen
 - [x] Onboarding flow with gender selection
+- [-] auth screens
 - [ ] Home screen with navigation
 - [ ] Products catalog screen
 - [ ] Cart and profile screens
