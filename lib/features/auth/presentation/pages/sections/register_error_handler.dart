@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../../core/errors/failures.dart';
 import '../../../../../core/errors/faliure_calsses.dart';
 
-mixin RegisterErrorHandler {
-  void handleRegisterError(
+mixin AuthErrorHandler {
+  void handleAuthError(
     Failure failure,
     Function(Map<String, String?>) setFieldErrors,
     Function() clearFieldErrors,

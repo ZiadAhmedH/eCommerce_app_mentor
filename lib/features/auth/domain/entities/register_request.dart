@@ -16,3 +16,19 @@ class RegisterRequest extends Equatable {
   @override
   List<Object> get props => [email, password, firstName, lastName];
 }
+
+
+
+class RegisterResponse extends Equatable {
+  final String message;
+
+  const RegisterResponse({
+    required this.message,
+  });
+
+  @override
+  List<Object?> get props => [message];
+
+  @override
+  String toString() => 'RegisterResponse(message: $message)';
+}

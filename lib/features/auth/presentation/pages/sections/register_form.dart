@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../cubit/register_cubit.dart';
+import '../../cubit/auth_cubit.dart';
 import '../widgets/debug_ifo.dart';
 import '../widgets/form_feilds.dart';
 import '../widgets/form_header.dart';
@@ -15,7 +15,7 @@ class RegisterForm extends StatefulWidget {
   State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> with RegisterErrorHandler {
+class _RegisterFormState extends State<RegisterForm> with AuthErrorHandler {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -36,20 +36,21 @@ class _RegisterFormState extends State<RegisterForm> with RegisterErrorHandler {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RegisterCubit, RegisterState>(
+    return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is RegisterError) {
-          handleRegisterError(
+          handleAuthError(
             state.failure,
             _setFieldErrors,
             _clearFieldErrors,
             context,
           );
         } else if (state is RegisterSuccess) {
-          _clearFieldErrors();
+          clearForm();
+          
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Account created successfully!'),
+             SnackBar(
+              content: Text(state.response.message ),
               backgroundColor: Colors.green,
             ),
           );
@@ -66,12 +67,10 @@ class _RegisterFormState extends State<RegisterForm> with RegisterErrorHandler {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Header Section
+
                     const RegisterFormHeader(),
                 
-                    // Debug Info Section
-                   // RegisterDebugInfo(fieldErrors: _fieldErrors),
-                
+                   
                     RegisterFormFields(
                       firstNameController: _firstNameController,
                       lastNameController: _lastNameController,
@@ -82,7 +81,6 @@ class _RegisterFormState extends State<RegisterForm> with RegisterErrorHandler {
                       onPasswordVisibilityToggle: _togglePasswordVisibility,
                     ),
                 
-                    // Actions Section
                   ],
                 ),
               ),
@@ -117,10 +115,19 @@ class _RegisterFormState extends State<RegisterForm> with RegisterErrorHandler {
     });
   }
 
+  void clearForm() {
+    _formKey.currentState?.reset();
+    _emailController.clear();
+    _passwordController.clear();
+    _firstNameController.clear();
+    _lastNameController.clear();
+    _clearFieldErrors();
+  }
+
   void _onRegisterPressed() {
     if (_formKey.currentState!.validate()) {
       _clearFieldErrors();
-      context.read<RegisterCubit>().register(
+      context.read<AuthCubit>().register(
         email: _emailController.text,
         password: _passwordController.text,
         firstName: _firstNameController.text,

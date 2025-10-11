@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/features/auth/presentation/pages/widgets/password_str.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../../shared/widgets/custom_form_field.dart';
@@ -106,11 +105,7 @@ class RegisterFormFields extends StatelessWidget {
               },
             ),
 
-            // Password strength indicator
-            if (passwordController.text.isNotEmpty &&
-                fieldErrors['password'] == null)
-              PasswordStrengthIndicator(password: passwordController.text),
-          ],
+             ],
         ),
       ],
     );

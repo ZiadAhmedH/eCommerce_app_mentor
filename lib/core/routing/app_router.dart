@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/features/auth/presentation/pages/login_register_view.dart';
+import 'package:ecommerce_app/features/auth/presentation/pages/login_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +34,7 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.login,
         name: "login",
-        builder: (context, state) => const LoginPage(),
+        builder: (context, state) => const LoginView(),
       ),
       GoRoute(
         path: AppRoutes.register,

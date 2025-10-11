@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/features/auth/domain/entities/register_request.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'register_request_model.g.dart';
@@ -20,4 +21,14 @@ class RegisterRequestModel {
       _$RegisterRequestModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$RegisterRequestModelToJson(this);
+
+
+  RegisterRequest toEntity() {
+    return RegisterRequest(
+      email: email,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    );
+  }
 }

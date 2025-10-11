@@ -1,6 +1,5 @@
 // Core exports
 export 'errors/failures.dart';
-export 'errors/exceptions.dart';
 export 'usecases/usecase.dart';
 export 'constents/constants.dart';
 export 'utils/helpers.dart';

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/features/auth/domain/usecase/login.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +9,7 @@ import '../../features/auth/data/dataresource/auth_remote_data_source.dart';
 import '../../features/auth/data/repo/auth_repo.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecase/register.dart';
-import '../../features/auth/presentation/cubit/register_cubit.dart';
+import '../../features/auth/presentation/cubit/auth_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -73,25 +74,27 @@ Dio _createOptimizedDio() {
 }
 
 void _setupAuthDependencies() {
-  // Data sources
   if (!getIt.isRegistered<AuthRemoteDataSource>()) {
     getIt.registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(dio: getIt()),
     );
   }
 
-  // Repositories  
   if (!getIt.isRegistered<AuthRepository>()) {
     getIt.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: getIt()),
     );
   }
 
-  // Use cases
-  if (!getIt.isRegistered<RegisterUseCase>()) {
+  
     getIt.registerLazySingleton(() => RegisterUseCase(repository: getIt()));
-  }
+  
+  // Usecases
+getIt.registerLazySingleton<LoginUseCase>(
+  () => LoginUseCase(getIt<AuthRepository>()),
+);
 
-  // Cubits - Factory for better memory management
-  getIt.registerFactory(() => RegisterCubit(registerUseCase: getIt()));
+
+
+  getIt.registerFactory(() => AuthCubit(registerUseCase: getIt() , loginUseCase: getIt()));
 }
