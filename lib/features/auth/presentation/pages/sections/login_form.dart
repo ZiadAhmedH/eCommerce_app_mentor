@@ -1,6 +1,10 @@
+import 'package:ecommerce_app/core/routing/app_routes.dart';
+import 'package:ecommerce_app/shared/widgets/text_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../../core/services/secure_storage_service.dart';
 import '../../cubit/auth_cubit.dart';
 import '../widgets/login_form_header.dart';
 import '../widgets/login_form_fields.dart';
@@ -40,50 +44,106 @@ class _LoginFormState extends State<LoginForm> with AuthErrorHandler {
             _clearFieldErrors,
             context,
           );
-
-
         } else if (state is LoginSuccess) {
           _clearFieldErrors();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.response.message),
-              backgroundColor: Colors.green,
-            ),
-          );
-          // TODO: Navigate to home page
-          // context.go(AppRoutes.home);
+
+          // Save tokens using SharedPreferences
+          _saveTokens(state);
+
+          // Show success message
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    const Icon(Icons.check_circle, color: Colors.white),
+                    const SizedBox(width: 8),
+                    const Text('Login successful!'),
+                  ],
+                ),
+                backgroundColor: Colors.green,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+
+            // Navigate after delay
+            Future.delayed(const Duration(seconds: 1), () {
+              if (mounted) {
+                context.go(AppRoutes.home);
+              }
+            });
+          }
         }
       },
       child: Form(
         key: _formKey,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const LoginFormHeader(),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight:
+                        MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top -
+                        MediaQuery.of(context).padding.bottom -
+                        180, // Approximate space for button and app bar
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Header Section
+                        const LoginFormHeader(),
 
-          
+                        // Form Fields Section
+                        LoginFormFields(
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          fieldErrors: _fieldErrors,
+                          isPasswordVisible: _isPasswordVisible,
+                          onPasswordVisibilityToggle: _togglePasswordVisibility,
+                        ),
 
-            LoginFormFields(
-              emailController: _emailController,
-              passwordController: _passwordController,
-              fieldErrors: _fieldErrors,
-              isPasswordVisible: _isPasswordVisible,
-              onPasswordVisibilityToggle: _togglePasswordVisibility,
+                        const SizedBox(height: 16),
+
+                        // Forgot Password Link
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              // Handle forgot password action
+                            },
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Spacer to push content up
+                        const Spacer(),
+
+                        // Add some bottom padding to ensure content doesn't touch the button
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
 
-            // Actions Section
-            LoginFormActions(
-              onLoginPressed: _onLoginPressed,
-              onForgotPassword: () {
-              },
-              
-            ),
+            // Fixed bottom button area
+            LoginFormActions(onLoginPressed: _onLoginPressed),
           ],
         ),
       ),
     );
   }
-
 
   void _setFieldErrors(Map<String, String?> errors) {
     setState(() {
@@ -110,6 +170,24 @@ class _LoginFormState extends State<LoginForm> with AuthErrorHandler {
         email: _emailController.text,
         password: _passwordController.text,
       );
+    }
+  }
+
+  // Simple save method
+  Future<void> _saveTokens(LoginSuccess state) async {
+    try {
+      await SecureTokenStorage.saveLoginTokens(
+        accessToken: state.response.accessToken,
+        refreshToken: state.response.refreshToken,
+      );
+
+      if (kDebugMode) {
+        print('✅ Tokens saved successfully');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Failed to save tokens: $e');
+      }
     }
   }
 }

@@ -9,7 +9,7 @@ mixin AuthErrorHandler {
     Function() clearFieldErrors,
     BuildContext context,
   ) {
-    print('🐛 Handling register error: ${failure.runtimeType}');
+    print('🐛 Handling auth error: ${failure.runtimeType}');
     print('🐛 Error message: ${failure.message}');
     print('🐛 Error details: ${failure.details}');
 
@@ -76,14 +76,201 @@ mixin AuthErrorHandler {
     Function() clearFieldErrors,
     BuildContext context,
   ) {
-    print('⚠️ General error: ${failure.message}');
+    print('⚠️ Attempting to show general error: ${failure.message}');
     clearFieldErrors();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(failure.message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 4),
-      ),
-    );
+
+    // Try multiple approaches to show the error
+    _showErrorMessage(context, failure.message);
+  }
+
+  void _showErrorMessage(BuildContext context, String message) {
+    // Method 1: Try with mounted check
+    if (!context.mounted) {
+      print('❌ Context not mounted, cannot show SnackBar');
+      return;
+    }
+
+    try {
+      // Method 2: Use ScaffoldMessenger with context
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+      // Clear any existing snackbars first
+      scaffoldMessenger.clearSnackBars();
+
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(
+                Icons.error_outline,
+                color: Colors.white,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            textColor: Colors.white,
+            onPressed: () {
+              scaffoldMessenger.hideCurrentSnackBar();
+            },
+          ),
+        ),
+      );
+
+      print('✅ SnackBar shown successfully');
+    } catch (snackBarError) {
+      print('❌ SnackBar failed: $snackBarError');
+
+      // Method 3: Fallback to AlertDialog
+      _showErrorDialog(context, message);
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    print('🔄 Falling back to AlertDialog');
+
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: const Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.red),
+                SizedBox(width: 8),
+                Text('Error'),
+              ],
+            ),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          );
+        },
+      );
+
+      print('✅ AlertDialog shown successfully');
+    } catch (dialogError) {
+      print('❌ AlertDialog also failed: $dialogError');
+
+      // Method 4: Last resort - print to console and debug print
+      debugPrint('🚨 CRITICAL ERROR (UI Failed): $message');
+    }
+  }
+
+  // Helper method to show success messages
+  void showSuccessMessage(BuildContext context, String message) {
+    if (!context.mounted) return;
+
+    try {
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
+      scaffoldMessenger.clearSnackBars();
+
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(
+                Icons.check_circle_outline,
+                color: Colors.white,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 4),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      );
+    } catch (e) {
+      print('❌ Success SnackBar failed: $e');
+    }
+  }
+
+  // Helper method to show loading messages
+  void showLoadingMessage(BuildContext context, String message) {
+    if (!context.mounted) return;
+
+    try {
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
+      scaffoldMessenger.clearSnackBars();
+
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.blue,
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      );
+    } catch (e) {
+      print('❌ Loading SnackBar failed: $e');
+    }
   }
 }

@@ -5,13 +5,11 @@ import '../../cubit/auth_cubit.dart';
 
 class LoginFormActions extends StatelessWidget {
   final VoidCallback onLoginPressed;
-  final VoidCallback? onForgotPassword;
   final VoidCallback? onCreateAccount;
 
   const LoginFormActions({
     super.key,
     required this.onLoginPressed,
-    this.onForgotPassword,
     this.onCreateAccount,
   });
 
@@ -20,19 +18,8 @@ class LoginFormActions extends StatelessWidget {
       var screenHeight = MediaQuery.of(context).size.height;
     return Column(
       children: [
-        const SizedBox(height: 16),
 
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: onForgotPassword,
-            child: const Text(
-              'Forgot Password?',
-              style: TextStyle(color: Colors.grey, fontSize: 14),
-            ),
-          ),
-        ),
-
+       
         const SizedBox(height: 20),
 
         // Login Button

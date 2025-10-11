@@ -10,6 +10,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false, // 👈 prevents keyboard from resizing the layout
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -22,10 +23,7 @@ class LoginView extends StatelessWidget {
       body: BlocProvider(
         create: (context) => getIt<AuthCubit>(),
         child: const SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: LoginForm(),
-          ),
+          child: LoginForm(),
         ),
       ),
     );

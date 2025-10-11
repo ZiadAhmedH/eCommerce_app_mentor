@@ -19,19 +19,19 @@ class LoginRequest extends Equatable {
 
 
 class LoginResponse extends Equatable {
-  final String token;
+  final String accessToken;
+  final String expiresAtUtc;
   final String refreshToken;
-  final String message;
 
   const LoginResponse({
-    required this.token,
+    required this.accessToken,
+    required this.expiresAtUtc,
     required this.refreshToken,
-    required this.message,
   });
 
   @override
-  List<Object?> get props => [token, refreshToken, message];
+  List<Object?> get props => [accessToken, expiresAtUtc, refreshToken];
 
   @override
-  String toString() => 'LoginResponse(message: $message, hasToken: ${token.isNotEmpty})';
+  String toString() => 'LoginResponse(accessToken: $accessToken,})';
 }

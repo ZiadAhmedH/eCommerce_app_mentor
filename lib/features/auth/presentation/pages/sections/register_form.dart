@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/features/auth/presentation/pages/widgets/from_asction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +6,6 @@ import '../../cubit/auth_cubit.dart';
 import '../widgets/debug_ifo.dart';
 import '../widgets/form_feilds.dart';
 import '../widgets/form_header.dart';
-import '../widgets/from_asction.dart';
 import 'register_error_handler.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -36,6 +36,8 @@ class _RegisterFormState extends State<RegisterForm> with AuthErrorHandler {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is RegisterError) {
@@ -47,46 +49,55 @@ class _RegisterFormState extends State<RegisterForm> with AuthErrorHandler {
           );
         } else if (state is RegisterSuccess) {
           clearForm();
-          
+
           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(
-              content: Text(state.response.message ),
+            SnackBar(
+              content: Text(state.response.message),
               backgroundColor: Colors.green,
             ),
           );
         }
       },
-      child: SizedBox(
-        height: double.infinity,
-        child: Form(
-          key: _formKey,
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
+              // Header Section
+              const RegisterFormHeader(),
 
-                    const RegisterFormHeader(),
-                
-                   
-                    RegisterFormFields(
-                      firstNameController: _firstNameController,
-                      lastNameController: _lastNameController,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                      fieldErrors: _fieldErrors,
-                      isPasswordVisible: _isPasswordVisible,
-                      onPasswordVisibilityToggle: _togglePasswordVisibility,
-                    ),
-                
-                  ],
+
+              // Form Fields Section
+              RegisterFormFields(
+                firstNameController: _firstNameController,
+                lastNameController: _lastNameController,
+                emailController: _emailController,
+                passwordController: _passwordController,
+                fieldErrors: _fieldErrors,
+                isPasswordVisible: _isPasswordVisible,
+                onPasswordVisibilityToggle: _togglePasswordVisibility,
+              ),
+
+              // Terms and conditions text
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[200]!),
+                ),
+                child: Text(
+                  'By creating an account, you agree to our Terms of Service and Privacy Policy. We use your information to provide and improve our services.',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              Spacer(),
-                  RegisterFormActions(onRegisterPressed: _onRegisterPressed),
-        
+
+             
+              RegisterFormActions(onRegisterPressed: _onRegisterPressed),
+
             ],
           ),
         ),

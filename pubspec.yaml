@@ -36,6 +36,9 @@ dependencies:
   
   # Functional Programming
   dartz: ^0.10.1
+  
+  # Secure Storage
+  flutter_secure_storage: ^9.0.0
 
 
 dev_dependencies:

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/constents/app_colors.dart';
-import '../../../../../core/constents/assets.dart';
 import '../../../../../shared/widgets/text_widget.dart';
-import '../../../../../shared/widgets/svg_handler.dart';
 
 class LoginFormHeader extends StatelessWidget {
   const LoginFormHeader({super.key});
@@ -21,19 +19,29 @@ class LoginFormHeader extends StatelessWidget {
               color: AppColor.textdark,
             ),
             const SizedBox(width: 8),
-             const SvgHandler(
-              height: 10,
-              width: 10,
-               assetPath: Assets.assetsIconsLogosvg,
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: AppColor.primaryColor,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: const Center(
+                child: Text(
+                  'L',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        const Text(
-          'Sign in to your account',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
-          textAlign: TextAlign.center,
-        ),
+        CustomTextWidget(text: "Please enter your data to continue", color: AppColor.textgray, textAlign: TextAlign.center),
+
         const SizedBox(height: 40),
       ],
     );

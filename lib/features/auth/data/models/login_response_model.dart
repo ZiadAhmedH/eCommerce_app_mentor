@@ -6,14 +6,14 @@ part 'login_response_model.g.dart';
 
 @JsonSerializable()
 class LoginResponseModel {
-  final String token;
+  final String accessToken;
   final String refreshToken;
-  final String message;
+  final String expiresAtUtc;
 
   const LoginResponseModel({
-    required this.token,
+    required this.accessToken,
     required this.refreshToken,
-    required this.message,
+    required this.expiresAtUtc,
   });
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
@@ -23,9 +23,9 @@ class LoginResponseModel {
 
   LoginResponse toEntity() {
     return LoginResponse(
-      token: token,
+      accessToken: accessToken,
       refreshToken: refreshToken,
-      message: message,
+      expiresAtUtc: expiresAtUtc,
     );
   }
 }
