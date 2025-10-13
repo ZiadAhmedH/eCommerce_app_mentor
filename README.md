@@ -59,6 +59,12 @@ lib/
 
 <img src="assets/screenshots/authmain.png" alt="main auth Screen" width="150"/>
 
+<img src="assets/screenshots/login.png" alt="login" width="150"/>
+
+ <img src="assets/screenshots/register.png" alt="register" width="150"/>
+
+ <img src="assets/screenshots/verify.png" alt="verify" width="150"/>
+
 </div>
 
 
