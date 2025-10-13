@@ -26,8 +26,8 @@ class _VerifyContentState extends State<VerifyContent> {
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 60,
+      width: 50,
+      height: 70,
       textStyle: const TextStyle(
         fontSize: 20,
         color: Colors.black,
@@ -66,7 +66,6 @@ class _VerifyContentState extends State<VerifyContent> {
               ),
             ),
             onCompleted: (pin) {
-              // Store the PIN for access from parent
               _onPinCompleted(pin);
             },
           ),
@@ -86,6 +85,7 @@ class _VerifyContentState extends State<VerifyContent> {
   
   void _onPinCompleted(String pin) {
     // You can add validation or other logic here
+    debugPrint('PIN entered: $pin');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('PIN entered: $pin'),

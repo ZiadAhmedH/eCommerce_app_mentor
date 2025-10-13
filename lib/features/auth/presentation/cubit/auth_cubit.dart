@@ -72,7 +72,8 @@ class AuthCubit extends Cubit<AuthState> {
       email: email.trim(),
       otp: otp.trim(),
     );
-
+   
+   print('Verifying email: $email with OTP: $otp');
     final Either<Failure, VerifyEmailResponse> result = await verifyEmailUseCase(request);
 
     result.fold(

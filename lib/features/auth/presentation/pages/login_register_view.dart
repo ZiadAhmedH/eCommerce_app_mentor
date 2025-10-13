@@ -27,7 +27,7 @@ class LoginRegisterView extends StatelessWidget {
                   children: [
                     SizedBox(height: screenHeight * 0.08),
 
-                    // Title
+                    
                     CustomTextWidget.title24(
                       "Let's Get Started",
                       textAlign: TextAlign.center,
@@ -35,10 +35,14 @@ class LoginRegisterView extends StatelessWidget {
                     ),
 
 
-                 
+                     SvgHandler.logo(
+              assetPath: Assets.assetsIconsLogosvg,
+              height: screenHeight * 0.2,
+              
+              color: AppColor.primaryColor,  
+            ),
 
-                    SizedBox(height: screenHeight * 0.2),
-
+                  
                     // facebook button
                     Container(
                       width: double.infinity,

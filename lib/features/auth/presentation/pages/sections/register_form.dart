@@ -52,7 +52,7 @@ class _RegisterFormState extends State<RegisterForm> with AuthErrorHandler {
           );
         } else if (state is RegisterSuccess) {
           
-            context.go(AppRoutes.verify, extra: _emailController.text);
+            context.push(AppRoutes.verify, extra: _emailController.text);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.response.message),

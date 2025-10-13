@@ -63,7 +63,7 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.register,
         name: "register",
-        pageBuilder: (context, state) => AppPageTransitions.slideFromBottom(
+        pageBuilder: (context, state) => AppPageTransitions.slideAndFade(
           context,
           state,
           const RegisterPage(),

@@ -43,9 +43,9 @@ class _SplashViewState extends State<SplashView>
      final hasSeenOnboarding =  getIt<SharedPreferences>().getBool(SharedKeys.isOnboardingCompleted) ?? false;
      
     final destination =
-        hasSeenOnboarding ?  AppRoutes.onboarding : (getIt<SharedPreferences>().getBool(SharedKeys.isLogin) ?? false) ? AppRoutes.home : AppRoutes.mainauth;
+        hasSeenOnboarding == false  ?  AppRoutes.onboarding : (getIt<SharedPreferences>().getBool(SharedKeys.isLogin) ?? false) ? AppRoutes.home : AppRoutes.mainauth;
       
-        AppNavigation.animatedGo(context, destination);
+        context.go(destination);
     if (mounted) context.go(destination);
   }
 

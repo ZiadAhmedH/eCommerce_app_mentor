@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../core/routing/app_navigation.dart';
 import '../../../../../shared/widgets/text_widget.dart';
 
@@ -16,21 +17,7 @@ class VerifyHeader extends StatelessWidget {
           // Back Button and Title Row
           Row(
             children: [
-              GestureDetector(
-                onTap: () => AppNavigation.animatedPop(context),
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black54,
-                    size: 18,
-                  ),
-                ),
-              ),
+              
               const Expanded(
                 child: Center(
                   child: CustomTextWidget(

@@ -9,9 +9,8 @@ import '../../cubit/auth_cubit.dart';
 
 class VerifyBottomSection extends StatefulWidget {
   final String? email;
-  final String? pin;
-
-  const VerifyBottomSection({super.key, this.email, this.pin});
+  final void Function()? onVerify;
+  const VerifyBottomSection({super.key, this.email, this.onVerify});
 
   @override
   State<VerifyBottomSection> createState() => _VerifyBottomSectionState();
@@ -139,7 +138,7 @@ class _VerifyBottomSectionState extends State<VerifyBottomSection> {
                 text: "Confirm Code",
                 onPressed: state is VerifyEmailLoading
                     ? null
-                    : _onVerifyPressed,
+                    : widget.onVerify,
                 isLoading: state is VerifyEmailLoading,
                 borderRadius: 16,
               );
@@ -149,12 +148,6 @@ class _VerifyBottomSectionState extends State<VerifyBottomSection> {
       ),
     );
   }
-  void _onVerifyPressed() {
-    // Verify with backend
-    final pin = widget.pin ;
-    print('PIN to verify: $pin');
-    context.read<AuthCubit>().verifyEmail(email: widget.email ?? '', otp: pin!);
-    
-  }
+ 
   }
 
