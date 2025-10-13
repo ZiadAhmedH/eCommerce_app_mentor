@@ -61,13 +61,16 @@ class SecureTokenStorage {
   static Future<String?> getAccessToken() async {
     try {
       if (_useSecureStorage) {
+        
         return await _secureStorage.read(key: _accessTokenKey);
+        
       } else {
         return await _getFromSharedPreferences(_accessTokenKey);
       }
     } catch (_) {
       _useSecureStorage = false;
       return await _getFromSharedPreferences(_accessTokenKey);
+      
     }
   }
 

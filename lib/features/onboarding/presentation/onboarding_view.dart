@@ -1,6 +1,9 @@
 import 'package:ecommerce_app/core/constents/app_colors.dart';
+import 'package:ecommerce_app/core/di/dependency_injection.dart';
+import 'package:ecommerce_app/core/services/shared_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/routing/app_routes.dart';
 import 'widgets/index.dart';
 
@@ -55,6 +58,10 @@ class _OnboardingViewState extends State<OnboardingView>
 
   Future<void> _completeOnboarding(BuildContext context) async {
     if (mounted) {
+      
+      getIt<SharedPreferences>()
+          .setBool(SharedKeys.isOnboardingCompleted, true);
+
       context.push(AppRoutes.mainauth);
     }
   }

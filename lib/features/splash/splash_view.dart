@@ -27,10 +27,7 @@ class _SplashViewState extends State<SplashView>
       vsync: this,
     )..forward();
 
-    _fadeAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     _navigateAfterDelay();
   }
@@ -39,14 +36,20 @@ class _SplashViewState extends State<SplashView>
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
-     
-     final hasSeenOnboarding =  getIt<SharedPreferences>().getBool(SharedKeys.isOnboardingCompleted) ?? false;
-     
-    final destination =
-        hasSeenOnboarding == false  ?  AppRoutes.onboarding : (getIt<SharedPreferences>().getBool(SharedKeys.isLogin) ?? false) ? AppRoutes.home : AppRoutes.mainauth;
-      
-        context.go(destination);
-    if (mounted) context.go(destination);
+
+    final prefs = getIt<SharedPreferences>();
+    final bool hasSeenOnboarding =
+        prefs.getBool(SharedKeys.isOnboardingCompleted) ?? false;
+    final bool isLoggedIn = prefs.getBool(SharedKeys.isLogin) ?? false;
+
+    final String initialRoute = !hasSeenOnboarding
+        ? AppRoutes.onboarding
+        : isLoggedIn
+        ? AppRoutes.home
+        : AppRoutes.mainauth;
+
+    context.go(initialRoute);
+    if (mounted) context.go(initialRoute);
   }
 
   @override
@@ -54,11 +57,6 @@ class _SplashViewState extends State<SplashView>
     _controller.dispose();
     super.dispose();
   }
-  
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +65,7 @@ class _SplashViewState extends State<SplashView>
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
-          child: Image.asset(
-            Assets.assetsIconsLogo,
-            width: 120,
-            height: 120,
-          ),
+          child: Image.asset(Assets.assetsIconsLogo, width: 120, height: 120),
         ),
       ),
     );

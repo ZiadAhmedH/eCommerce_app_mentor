@@ -3,6 +3,7 @@ import 'package:ecommerce_app/core/routing/app_routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/routing/app_navigation.dart';
 import '../../../../../core/services/secure_storage_service.dart';
@@ -70,7 +71,8 @@ class _LoginFormState extends State<LoginForm> with AuthErrorHandler {
             Future.delayed(const Duration(seconds: 1), () {
               if (mounted) {
                  getIt<SharedPreferences>().setBool(SharedKeys.isLogin, true);
-                AppNavigation.animatedGo( context,AppRoutes.home);
+                 
+                context.go(AppRoutes.home);
               }
             });
           }

@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/core/services/secure_storage_service.dart';
+import 'package:ecommerce_app/shared/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/routing/app_routes.dart';
@@ -44,6 +46,9 @@ class HomeView extends StatelessWidget {
                 ),
               ),
             ),
+
+            const SizedBox(height: 16),
+            CustomTextWidget(text: "${SecureTokenStorage.getAccessToken().toString()}")
           ],
         ),
       ),
