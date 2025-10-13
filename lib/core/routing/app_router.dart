@@ -1,5 +1,5 @@
 import 'package:ecommerce_app/features/auth/presentation/pages/login_register_view.dart';
-import 'package:ecommerce_app/features/auth/presentation/pages/login_view.dart';
+import 'package:ecommerce_app/features/auth/presentation/pages/verify_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -68,6 +68,20 @@ class AppRouter {
           state,
           const RegisterPage(),
         ),
+      ),
+
+      GoRoute(
+        path: AppRoutes.verify,
+        name: "verify",
+        pageBuilder: (context, state) {
+          final email = state.extra as String?;
+          return AppPageTransitions.slideAndFade(
+            context,
+            state,
+            VerifyView(email: email),
+          );
+        } 
+      
       ),
 
       // Main Shell with animated pages

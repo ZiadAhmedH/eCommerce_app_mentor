@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/features/auth/domain/usecase/login.dart';
+import 'package:ecommerce_app/features/auth/domain/usecase/verifiy_email.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
@@ -76,9 +77,11 @@ void _setupAuthDependencies() {
 
   getIt.registerLazySingleton(() => RegisterUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => LoginUseCase(getIt<AuthRepository>()));
+  getIt.registerLazySingleton(() => VerifyEmailUseCase(getIt<AuthRepository>()));
 
   getIt.registerFactory(() => AuthCubit(
         registerUseCase: getIt(),
         loginUseCase: getIt(),
+        verifyEmailUseCase: getIt()
       ));
 }

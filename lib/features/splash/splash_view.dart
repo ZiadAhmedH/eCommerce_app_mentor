@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/core/di/dependency_injection.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constents/assets.dart';
 import '../../core/routing/app_navigation.dart';
@@ -43,8 +44,9 @@ class _SplashViewState extends State<SplashView>
      
     final destination =
         hasSeenOnboarding ?  AppRoutes.onboarding : (getIt<SharedPreferences>().getBool(SharedKeys.isLogin) ?? false) ? AppRoutes.home : AppRoutes.mainauth;
-
-    if (mounted) AppNavigation.animatedGo(context, destination);
+      
+        AppNavigation.animatedGo(context, destination);
+    if (mounted) context.go(destination);
   }
 
   @override
@@ -52,6 +54,11 @@ class _SplashViewState extends State<SplashView>
     _controller.dispose();
     super.dispose();
   }
+  
+
+
+
+
 
   @override
   Widget build(BuildContext context) {

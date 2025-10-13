@@ -1,7 +1,10 @@
+import 'package:ecommerce_app/core/routing/app_navigation.dart';
+import 'package:ecommerce_app/core/routing/app_routes.dart';
 import 'package:ecommerce_app/features/auth/presentation/pages/widgets/from_asction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../cubit/auth_cubit.dart';
 import '../widgets/debug_ifo.dart';
 import '../widgets/form_feilds.dart';
@@ -48,14 +51,16 @@ class _RegisterFormState extends State<RegisterForm> with AuthErrorHandler {
             context,
           );
         } else if (state is RegisterSuccess) {
-          clearForm();
-
+          
+            context.go(AppRoutes.verify, extra: _emailController.text);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.response.message),
               backgroundColor: Colors.green,
             ),
+            
           );
+          clearForm();
         }
       },
       child: Form(
