@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
-// Auth
+// Auth imports
 import '../../features/auth/data/dataresource/auth_remote_data_source.dart';
 import '../../features/auth/data/repo/auth_repo.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -15,86 +15,70 @@ final getIt = GetIt.instance;
 
 Future<void> setupDependencyInjection() async {
   try {
-    // Core dependencies first
     await _setupCoreDependencies();
-    
-    // Feature dependencies
     _setupAuthDependencies();
-    
     debugPrint('✅ Dependency injection setup completed');
-  } catch (e) {
-    debugPrint('❌ DI setup error: $e');
+  } catch (e, stack) {
+    debugPrint('❌ DI setup error: $e\n$stack');
     rethrow;
   }
 }
 
 Future<void> _setupCoreDependencies() async {
-  // External dependencies - these can be slow, so we optimize them
   if (!getIt.isRegistered<SharedPreferences>()) {
-    final sharedPreferences = await SharedPreferences.getInstance();
-    getIt.registerLazySingleton(() => sharedPreferences);
+    final prefs = await SharedPreferences.getInstance();
+    getIt.registerLazySingleton<SharedPreferences>(() => prefs);
   }
-  
-  // Dio setup with optimized configuration
+
   if (!getIt.isRegistered<Dio>()) {
-    getIt.registerLazySingleton(() => _createOptimizedDio());
+    getIt.registerLazySingleton<Dio>(() => _createDio());
   }
 }
 
-Dio _createOptimizedDio() {
-  final dio = Dio();
-  
-  // Optimized configuration for better performance
-  dio.options = BaseOptions(
-    connectTimeout: const Duration(seconds: 10), // Reduced timeout
-    receiveTimeout: const Duration(seconds: 10),
-    sendTimeout: const Duration(seconds: 10),
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
+Dio _createDio() {
+  final dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
+      headers: const {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    ),
   );
-  
-  // Minimal logging in debug mode to reduce frame drops
+
   if (kDebugMode) {
     dio.interceptors.add(
       LogInterceptor(
-        requestBody: false, // Disable to reduce console spam
-        responseBody: false, // Disable to reduce console spam
-        requestHeader: false,
-        responseHeader: false,
         request: true,
         error: true,
-        logPrint: (obj) => debugPrint('🌐 $obj'), // Custom log prefix
+        requestHeader: false,
+        responseHeader: false,
+        requestBody: false,
+        responseBody: false,
+        logPrint: (msg) => debugPrint('🌐 $msg'),
       ),
     );
   }
-  
+
   return dio;
 }
 
 void _setupAuthDependencies() {
-  if (!getIt.isRegistered<AuthRemoteDataSource>()) {
-    getIt.registerLazySingleton<AuthRemoteDataSource>(
-      () => AuthRemoteDataSourceImpl(dio: getIt()),
-    );
-  }
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(dio: getIt()),
+  );
 
-  if (!getIt.isRegistered<AuthRepository>()) {
-    getIt.registerLazySingleton<AuthRepository>(
-      () => AuthRepositoryImpl(remoteDataSource: getIt()),
-    );
-  }
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(remoteDataSource: getIt()),
+  );
 
-  
-    getIt.registerLazySingleton(() => RegisterUseCase(repository: getIt()));
-  
-  // Usecases
-getIt.registerLazySingleton<LoginUseCase>(
-  () => LoginUseCase(getIt<AuthRepository>()),
-);
+  getIt.registerLazySingleton(() => RegisterUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => LoginUseCase(getIt<AuthRepository>()));
 
-
-
-  getIt.registerFactory(() => AuthCubit(registerUseCase: getIt() , loginUseCase: getIt()));
+  getIt.registerFactory(() => AuthCubit(
+        registerUseCase: getIt(),
+        loginUseCase: getIt(),
+      ));
 }

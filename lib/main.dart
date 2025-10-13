@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/core/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
 import 'core/routing/app_router.dart';
 import 'core/di/dependency_injection.dart';
@@ -8,8 +7,8 @@ void main() async {
   
   
   await setupDependencyInjection();
+
   
-  OnboardingService.resetOnboarding();
   
   runApp(const MyApp());
   

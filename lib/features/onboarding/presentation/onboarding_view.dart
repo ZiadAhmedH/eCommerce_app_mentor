@@ -2,7 +2,6 @@ import 'package:ecommerce_app/core/constents/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/routing/app_routes.dart';
-import '../../../core/services/onboarding_service.dart';
 import 'widgets/index.dart';
 
 class OnboardingView extends StatefulWidget {

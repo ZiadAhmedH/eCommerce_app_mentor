@@ -47,3 +47,23 @@ class LoginError extends AuthState {
   List<Object> get props => [failure];
 }
 class LogoutState extends AuthState {}
+
+
+
+class VerifyEmailLoading extends AuthState {}
+class VerifyEmailSuccess extends AuthState {
+  final VerifyEmailResponse response;
+
+  const VerifyEmailSuccess(this.response);
+
+  @override
+  List<Object> get props => [response];
+}
+class VerifyEmailError extends AuthState {
+  final Failure failure;
+
+  const VerifyEmailError(this.failure);
+
+  @override
+  List<Object> get props => [failure];
+}

@@ -61,7 +61,6 @@ mixin AuthErrorHandler {
     final Map<String, String?> formattedErrors = {};
     fieldErrors.forEach((field, errors) {
       if (errors.isNotEmpty) {
-        // Join multiple errors with line breaks
         formattedErrors[field] = errors.join('\n');
         print('📝 Setting error for field "$field": ${formattedErrors[field]}');
       }
@@ -76,44 +75,46 @@ mixin AuthErrorHandler {
     Function() clearFieldErrors,
     BuildContext context,
   ) {
-    print('⚠️ Attempting to show general error: ${failure.message}');
+    print('⚠️ Handling general error: ${failure.message}');
     clearFieldErrors();
 
-    // Try multiple approaches to show the error
-    _showErrorMessage(context, failure.message);
+    // Use a post-frame callback to ensure UI is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) {
+        _showErrorMessage(context, failure.message);
+      }
+    });
   }
 
   void _showErrorMessage(BuildContext context, String message) {
-    // Method 1: Try with mounted check
+    print('🔄 Attempting to show error message: $message');
+
+    // Check if context is mounted
     if (!context.mounted) {
       print('❌ Context not mounted, cannot show SnackBar');
       return;
     }
 
     try {
-      // Method 2: Use ScaffoldMessenger with context
+      // Find the nearest ScaffoldMessenger
       final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-      // Clear any existing snackbars first
+      print('🔍 ScaffoldMessenger found, showing SnackBar');
+
+      // Clear existing snackbars
       scaffoldMessenger.clearSnackBars();
 
+      // Show the error snackbar
       scaffoldMessenger.showSnackBar(
         SnackBar(
           content: Row(
             children: [
-              const Icon(
-                Icons.error_outline,
-                color: Colors.white,
-                size: 20,
-              ),
+              const Icon(Icons.error_outline, color: Colors.white, size: 20),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   message,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
             ],
@@ -122,11 +123,9 @@ mixin AuthErrorHandler {
           duration: const Duration(seconds: 5),
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: 'OK',
             textColor: Colors.white,
             onPressed: () {
               scaffoldMessenger.hideCurrentSnackBar();
@@ -139,28 +138,31 @@ mixin AuthErrorHandler {
     } catch (snackBarError) {
       print('❌ SnackBar failed: $snackBarError');
 
-      // Method 3: Fallback to AlertDialog
-      _showErrorDialog(context, message);
+      // Try alternative approach - direct context
+      _showAlternativeError(context, message);
     }
   }
 
-  void _showErrorDialog(BuildContext context, String message) {
-    print('🔄 Falling back to AlertDialog');
+  void _showAlternativeError(BuildContext context, String message) {
+    print('🔄 Trying alternative error display');
 
     try {
+      // Try using the root navigator context
+      final rootContext = Navigator.of(context, rootNavigator: true).context;
+
       showDialog(
-        context: context,
+        context: rootContext,
         barrierDismissible: true,
         builder: (BuildContext dialogContext) {
           return AlertDialog(
             title: const Row(
               children: [
-                Icon(Icons.error_outline, color: Colors.red),
+                Icon(Icons.error_outline, color: Colors.red, size: 24),
                 SizedBox(width: 8),
                 Text('Error'),
               ],
             ),
-            content: Text(message),
+            content: Text(message, style: const TextStyle(fontSize: 16)),
             actions: [
               TextButton(
                 onPressed: () {
@@ -176,59 +178,82 @@ mixin AuthErrorHandler {
         },
       );
 
-      print('✅ AlertDialog shown successfully');
+      print('✅ Alternative error dialog shown');
     } catch (dialogError) {
-      print('❌ AlertDialog also failed: $dialogError');
+      print('❌ Alternative error dialog failed: $dialogError');
 
-      // Method 4: Last resort - print to console and debug print
+      // Last resort - print to debug console
       debugPrint('🚨 CRITICAL ERROR (UI Failed): $message');
+
+      // Try one more simple approach
+      _showSimpleSnackBar(context, message);
     }
   }
 
-  // Helper method to show success messages
+  void _showSimpleSnackBar(BuildContext context, String message) {
+    try {
+      // Very simple approach
+      final snackBar = SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 4),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      print('✅ Simple SnackBar shown');
+    } catch (e) {
+      print('❌ Even simple SnackBar failed: $e');
+
+      // Absolutely final fallback - just print
+      print('🚨 FINAL ERROR MESSAGE: $message');
+    }
+  }
+
+  // Enhanced success message with better error handling
   void showSuccessMessage(BuildContext context, String message) {
     if (!context.mounted) return;
 
-    try {
-      final scaffoldMessenger = ScaffoldMessenger.of(context);
-      scaffoldMessenger.clearSnackBars();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) {
+        try {
+          final scaffoldMessenger = ScaffoldMessenger.of(context);
+          scaffoldMessenger.clearSnackBars();
 
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(
-                Icons.check_circle_outline,
-                color: Colors.white,
-                size: 20,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  message,
-                  style: const TextStyle(
+          scaffoldMessenger.showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(
+                    Icons.check_circle_outline,
                     color: Colors.white,
-                    fontSize: 14,
+                    size: 20,
                   ),
-                ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      message,
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 4),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      );
-    } catch (e) {
-      print('❌ Success SnackBar failed: $e');
-    }
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 4),
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          );
+        } catch (e) {
+          print('❌ Success SnackBar failed: $e');
+        }
+      }
+    });
   }
 
-  // Helper method to show loading messages
+  // Enhanced loading message
   void showLoadingMessage(BuildContext context, String message) {
     if (!context.mounted) return;
 
@@ -252,10 +277,7 @@ mixin AuthErrorHandler {
               Expanded(
                 child: Text(
                   message,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
             ],
@@ -264,9 +286,7 @@ mixin AuthErrorHandler {
           duration: const Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
     } catch (e) {

@@ -1,10 +1,14 @@
+import 'package:ecommerce_app/core/di/dependency_injection.dart';
 import 'package:ecommerce_app/core/routing/app_routes.dart';
 import 'package:ecommerce_app/shared/widgets/text_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../../core/routing/app_navigation.dart';
 import '../../../../../core/services/secure_storage_service.dart';
+import '../../../../../core/services/shared_keys.dart';
 import '../../cubit/auth_cubit.dart';
 import '../widgets/login_form_header.dart';
 import '../widgets/login_form_fields.dart';
@@ -44,13 +48,12 @@ class _LoginFormState extends State<LoginForm> with AuthErrorHandler {
             _clearFieldErrors,
             context,
           );
+
         } else if (state is LoginSuccess) {
           _clearFieldErrors();
 
-          // Save tokens using SharedPreferences
           _saveTokens(state);
 
-          // Show success message
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -66,10 +69,10 @@ class _LoginFormState extends State<LoginForm> with AuthErrorHandler {
               ),
             );
 
-            // Navigate after delay
             Future.delayed(const Duration(seconds: 1), () {
               if (mounted) {
-                context.go(AppRoutes.home);
+                 getIt<SharedPreferences>().setBool(SharedKeys.isLogin, true);
+                AppNavigation.animatedGo( context,AppRoutes.home);
               }
             });
           }
@@ -173,7 +176,6 @@ class _LoginFormState extends State<LoginForm> with AuthErrorHandler {
     }
   }
 
-  // Simple save method
   Future<void> _saveTokens(LoginSuccess state) async {
     try {
       await SecureTokenStorage.saveLoginTokens(

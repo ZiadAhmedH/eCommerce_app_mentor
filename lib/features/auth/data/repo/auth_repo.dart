@@ -2,7 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:ecommerce_app/core/errors/faliure_calsses.dart';
 import 'package:ecommerce_app/features/auth/data/dataresource/auth_remote_data_source.dart';
 import 'package:ecommerce_app/features/auth/data/models/login_request_model.dart';
+import 'package:ecommerce_app/features/auth/data/models/verify_email_request_model.dart';
 import 'package:ecommerce_app/features/auth/domain/entities/login_request.dart';
+import 'package:ecommerce_app/features/auth/domain/entities/verify.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/errors/mapper.dart';
@@ -17,7 +19,9 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, RegisterResponse>> register(RegisterRequest request) async {
+  Future<Either<Failure, RegisterResponse>> register(
+    RegisterRequest request,
+  ) async {
     try {
       final requestModel = RegisterRequestModel(
         email: request.email,
@@ -28,10 +32,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final response = await remoteDataSource.register(requestModel);
       debugPrint("success $response");
-     
-      return Right(response.toEntity());
 
-      
+      return Right(response.toEntity());
     } catch (e) {
       final failure = FailureMapper.fromError(e);
       return Left(failure);
@@ -39,7 +41,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, LoginResponse>> login(LoginRequest request) async{
+  Future<Either<Failure, LoginResponse>> login(LoginRequest request) async {
     try {
       final requestModel = LoginRequestModel(
         email: request.email,
@@ -48,10 +50,23 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final response = await remoteDataSource.login(requestModel);
       debugPrint("success $response");
-     
-      return Right(response.toEntity());
 
-      
+      return Right(response.toEntity());
+    } catch (e) {
+      final failure = FailureMapper.fromError(e);
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, VerifyEmailResponse>> verifyEmail(VerifyEmailRequest requestVerify) async {
+    try {
+        final request = VerifyEmailRequestModel(
+           email: requestVerify.email, otp: requestVerify.otp);
+
+      final response = await remoteDataSource.verifyEmail(request);
+      debugPrint("success $response");
+      return Right(response.toEntity());
     } catch (e) {
       final failure = FailureMapper.fromError(e);
       return Left(failure);

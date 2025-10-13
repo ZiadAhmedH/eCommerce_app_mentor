@@ -4,17 +4,20 @@ import 'package:dartz/dartz.dart';
 import '../../domain/entities/login_request.dart';
 import '../../domain/entities/register_request.dart';
 import '../../domain/entities/user.dart';
+import '../../domain/entities/verify.dart';
 import '../../domain/usecase/login.dart';
 import '../../domain/usecase/register.dart';
 import '../../../../core/errors/failures.dart';
+import '../../domain/usecase/verifiy_email.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final RegisterUseCase registerUseCase;
   final LoginUseCase loginUseCase;
+  final VerifyEmailUseCase verifyEmailUseCase;
 
-  AuthCubit({required this.registerUseCase , required this.loginUseCase}) : super(AuthInitial());
+  AuthCubit({required this.registerUseCase , required this.loginUseCase , required this.verifyEmailUseCase}) : super(AuthInitial());
 
   Future<void> register({
     required String email,
@@ -56,6 +59,25 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (failure) => emit(LoginError(failure)),
       (response) => emit(LoginSuccess(response)),
+    );
+  }
+
+  Future<void> verifyEmail({
+    required String email,
+    required String otp,
+  }) async {
+    emit(VerifyEmailLoading());
+
+    final request = VerifyEmailRequest(
+      email: email.trim(),
+      otp: otp.trim(),
+    );
+
+    final Either<Failure, VerifyEmailResponse> result = await verifyEmailUseCase(request);
+
+    result.fold(
+      (failure) => emit(VerifyEmailError(failure)),
+      (response) => emit(VerifyEmailSuccess(response)),
     );
   }
 

@@ -10,56 +10,108 @@ import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_page.dart';
 import '../../features/onboarding/presentation/onboarding_view.dart';
 import '../../features/splash/splash_view.dart';
+import 'animation_page_transitions.dart';
 import 'app_routes.dart';
+
 class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
-    debugLogDiagnostics: false, // Disable to reduce console spam
+    debugLogDiagnostics: false,
     routes: [
+      // Splash - Fade in
       GoRoute(
         path: AppRoutes.splash,
         name: "splash",
-        builder: (context, state) => const SplashView(),
+        pageBuilder: (context, state) => AppPageTransitions.fadeTransition(
+          context,
+          state,
+          const SplashView(),
+        ),
       ),
+
+      // Onboarding - Slide from right
       GoRoute(
         path: AppRoutes.onboarding,
         name: "onboarding",
-        builder: (context, state) => const OnboardingView(),
+        pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+          context,
+          state,
+          const OnboardingView(),
+        ),
       ),
+
+      // Main Auth - Scale animation
       GoRoute(
         path: AppRoutes.mainauth,
         name: "mainauth",
-        builder: (context, state) =>  LoginRegisterView(),
+        pageBuilder: (context, state) => AppPageTransitions.scaleTransition(
+          context,
+          state,
+          LoginRegisterView(),
+        ),
       ),
+
+      // Login - Slide and fade
       GoRoute(
         path: AppRoutes.login,
         name: "login",
-        builder: (context, state) => const LoginView(),
+        pageBuilder: (context, state) =>
+            AppPageTransitions.slideAndFade(context, state, const LoginView()),
       ),
+
+      // Register - Slide from bottom
       GoRoute(
         path: AppRoutes.register,
         name: "register",
-        builder: (context, state) => const RegisterPage(),
+        pageBuilder: (context, state) => AppPageTransitions.slideFromBottom(
+          context,
+          state,
+          const RegisterPage(),
+        ),
       ),
+
+      // Main Shell with animated pages
       ShellRoute(
-        builder: (context, state, child) => MainAppShell(child: child),
+        pageBuilder: (context, state, child) =>
+            AppPageTransitions.fadeTransition(
+              context,
+              state,
+              MainAppShell(child: child),
+            ),
         routes: [
+          // Home - Fade transition
           GoRoute(
             path: AppRoutes.home,
             name: "home",
-            builder: (context, state) => const HomeView(),
+            pageBuilder: (context, state) => AppPageTransitions.fadeTransition(
+              context,
+              state,
+              const HomeView(),
+            ),
           ),
+
+          // Products - Slide from right
           GoRoute(
             path: AppRoutes.products,
             name: "products",
-            builder: (context, state) => const ProductsPage(),
+            pageBuilder: (context, state) => AppPageTransitions.slideFromRight(
+              context,
+              state,
+              const ProductsPage(),
+            ),
           ),
+
+          // Product Detail - Hero zoom (for dramatic effect)
           GoRoute(
             path: AppRoutes.productDetail,
             name: "productDetail",
-            builder: (context, state) {
+            pageBuilder: (context, state) {
               final productId = state.pathParameters['id']!;
-              return ProductDetailPage(productId: productId);
+              return AppPageTransitions.heroZoom(
+                context,
+                state,
+                ProductDetailPage(productId: productId),
+              );
             },
           ),
         ],
@@ -83,7 +135,10 @@ class AppRouter {
       ),
     ),
   );
-}class MainAppShell extends StatefulWidget {
+}
+
+// Updated MainAppShell with smoother tab animations
+class MainAppShell extends StatefulWidget {
   final Widget child;
 
   const MainAppShell({super.key, required this.child});
@@ -92,65 +147,98 @@ class AppRouter {
   State<MainAppShell> createState() => _MainAppShellState();
 }
 
-class _MainAppShellState extends State<MainAppShell> {
+class _MainAppShellState extends State<MainAppShell>
+    with TickerProviderStateMixin {
   late PageController _pageController;
+  late AnimationController _tabAnimationController;
+  late Animation<double> _tabAnimation;
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const HomeView(), // Home
-    const ProductsPage(), // Products
-    const Scaffold(body: Center(child: Text('Cart'))), // Cart placeholder
-    const Scaffold(body: Center(child: Text('Profile'))), // Profile placeholder
+    const HomeView(),
+    const ProductsPage(),
+    const Scaffold(body: Center(child: Text('Cart'))),
+    const Scaffold(body: Center(child: Text('Profile'))),
   ];
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+    _tabAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _tabAnimation = CurvedAnimation(
+      parent: _tabAnimationController,
+      curve: Curves.easeInOutCubic,
+    );
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _tabAnimationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          // Update the URL to match the current page
-          _updateRouteForIndex(index);
+      body: AnimatedBuilder(
+        animation: _tabAnimation,
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+            _updateRouteForIndex(index);
+          },
+          children: _pages,
+        ),
+        builder: (context, child) {
+          return Transform.scale(
+            scale: 0.95 + (0.05 * _tabAnimation.value),
+            child: child,
+          );
         },
-        children: _pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
-            label: 'Products',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          onTap: _onItemTapped,
+          selectedItemColor: Theme.of(context).primaryColor,
+          unselectedItemColor: Colors.grey,
+          elevation: 0,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag),
+              label: 'Products',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          ],
+        ),
       ),
     );
   }
 
   void _updateRouteForIndex(int index) {
-    // Update URL without rebuilding the entire shell
     switch (index) {
       case 0:
         if (kDebugMode) print('🏠 Going to Home');
@@ -178,10 +266,15 @@ class _MainAppShellState extends State<MainAppShell> {
       print('📱 NAV: Tab $_currentIndex → Tab $index');
     }
 
+    // Animate tab change
+    _tabAnimationController.forward().then((_) {
+      _tabAnimationController.reverse();
+    });
+
     // Animate to the selected page
     _pageController.animateToPage(
       index,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 350),
       curve: Curves.easeInOutCubic,
     );
   }
