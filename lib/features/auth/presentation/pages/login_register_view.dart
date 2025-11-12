@@ -159,7 +159,6 @@ class LoginRegisterView extends StatelessWidget {
                     Spacer(),
 
 
-                    // Already have account section
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

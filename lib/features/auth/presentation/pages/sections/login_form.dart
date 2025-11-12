@@ -48,6 +48,13 @@ class _LoginFormState extends State<LoginForm> with AuthErrorHandler {
             context,
           );
 
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.failure.message),
+              backgroundColor: Colors.red,
+            ),
+          );
+
         } else if (state is LoginSuccess) {
           _clearFieldErrors();
 
