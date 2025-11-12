@@ -10,6 +10,7 @@ import '../../features/auth/data/dataresource/auth_remote_data_source.dart';
 import '../../features/auth/data/repo/auth_repo.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecase/register.dart';
+import '../../features/auth/domain/usecase/resend_otp.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 
 final getIt = GetIt.instance;
@@ -78,10 +79,12 @@ void _setupAuthDependencies() {
   getIt.registerLazySingleton(() => RegisterUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => LoginUseCase(getIt<AuthRepository>()));
   getIt.registerLazySingleton(() => VerifyEmailUseCase(getIt<AuthRepository>()));
+  getIt.registerLazySingleton(() => ResendOTPUseCase(getIt<AuthRepository>()));
 
   getIt.registerFactory(() => AuthCubit(
         registerUseCase: getIt(),
         loginUseCase: getIt(),
-        verifyEmailUseCase: getIt()
+        verifyEmailUseCase: getIt(),
+        resendOTPUseCase: getIt(),
       ));
 }
